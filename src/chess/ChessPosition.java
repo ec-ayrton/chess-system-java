@@ -10,7 +10,7 @@ public class ChessPosition {
 	public ChessPosition(char column, int row) {
 		
 		if(column < 'a' || column > 'h' || row <1 || row >8 ) {
-			throw new ChessException("Erro ao instanciar posição: Posição invalida!");
+			throw new ChessException("Erro ao instanciar posicao: Posicao invalida!");
 		}
 		
 		this.column = column;
