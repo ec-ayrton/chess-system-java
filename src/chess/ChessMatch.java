@@ -8,11 +8,23 @@ import chess.pieces.Rook;
 
 public class ChessMatch {
 
+	private int turn;
+	private Color currentPlayer;
 	private Board board;
 
 	public ChessMatch() {
 		board = new Board(8, 8);
+		turn = 1;
+		currentPlayer = Color.WHITE;
 		initialSetup();
+	}
+
+	public int getTurn() {
+		return turn;
+	}
+
+	public Color getCurrentPlayer() {
+		return currentPlayer;
 	}
 
 	public ChessPiece[][] getPieces() {
@@ -25,46 +37,53 @@ public class ChessMatch {
 		return mat;
 	}
 
-	
-	
-	public boolean[][] possibleMoves(ChessPosition sourceposition){
+	public boolean[][] possibleMoves(ChessPosition sourceposition) {
 		Position position = sourceposition.ToPosition();
 		validateSourcePosition(position);
 		return board.piece(position).possibleMoves();
 	}
-	
-	public ChessPiece PerformChessmove(ChessPosition sourceposition,ChessPosition targetposition) {
+
+	public ChessPiece PerformChessmove(ChessPosition sourceposition, ChessPosition targetposition) {
 		Position source = sourceposition.ToPosition();
 		Position target = targetposition.ToPosition();
-		
+
 		validateSourcePosition(source);
-		validateTargetPosition(source,target);
+		validateTargetPosition(source, target);
 		Piece capturedPiece = makeMove(source, target);
-		
+
+		nextTurn();
 		return (ChessPiece) capturedPiece;
 	}
-	
+
 	private Piece makeMove(Position source, Position target) {
 		Piece p = board.removePiece(source);
 		Piece captured = board.removePiece(target);
 		board.placePiece(p, target);
 		return captured;
 	}
-	
-	
+
 	private void validateSourcePosition(Position position) {
-		if(!board.thereIsAPiece(position)) {
+		if (!board.thereIsAPiece(position)) {
 			throw new ChessException("Nao existe peca na posicao de origem !");
 		}
-		if(!board.piece(position).isThereAnyPossibleMove()) {
+		if(currentPlayer!= ((ChessPiece) board.piece(position)).getColor()) {
+			throw new ChessException("A peca escolhida é do adversario !");
+		}
+		if (!board.piece(position).isThereAnyPossibleMove()) {
 			throw new ChessException("Nao existe movimentos possiveis para a peca escolhida !");
 		}
 	}
-	
-	private void validateTargetPosition(Position source,Position target) {
-		if(!board.piece(source).possibleMove(target)) {
+
+	private void validateTargetPosition(Position source, Position target) {
+		if (!board.piece(source).possibleMove(target)) {
 			throw new ChessException("a peca escolhida nao pode se mover para posico de destino !");
 		}
+	}
+
+	
+	private void nextTurn() {
+		turn++;
+		currentPlayer = ( currentPlayer== Color.WHITE) ? Color.BLACK : Color.WHITE;
 	}
 	
 	
@@ -89,6 +108,4 @@ public class ChessMatch {
 		placeNewPiece('d', 8, new King(board, Color.BLACK));
 	}
 
-	
-	
 }

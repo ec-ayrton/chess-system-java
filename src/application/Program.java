@@ -12,31 +12,31 @@ public class Program {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		
+
 		Scanner sc = new Scanner(System.in);
 		ChessMatch chessMatch = new ChessMatch();
-		
-		while(true) {
-			try{
-				UI.clearScreen();			
-				UI.printBoard(chessMatch.getPieces());
+
+		while (true) {
+			try {
+				UI.clearScreen();
+				UI.printMatch(chessMatch);
 				System.out.println();
 				System.out.print("Source : ");
-				ChessPosition  source = UI.readChessPosition(sc);
-				
+				ChessPosition source = UI.readChessPosition(sc);
+
 				boolean[][] possiblemoves = chessMatch.possibleMoves(source);
 				UI.clearScreen();
-				UI.printBoard(chessMatch.getPieces(), possiblemoves);
-				
+				UI.printMatch(chessMatch);
+
 				System.out.println();
 				System.out.print("Target : ");
-				ChessPosition  target = UI.readChessPosition(sc);
-			
+				ChessPosition target = UI.readChessPosition(sc);
+
 				ChessPiece capturedPiece = chessMatch.PerformChessmove(source, target);
-			}catch(ChessException e){
+			} catch (ChessException e) {
 				System.out.println(e.getMessage());
 				sc.nextLine();
-			}catch(InputMismatchException f) {
+			} catch (InputMismatchException f) {
 				System.out.println(f.getMessage());
 				sc.nextLine();
 			}
